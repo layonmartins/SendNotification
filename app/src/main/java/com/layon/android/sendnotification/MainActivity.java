@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this, CHANNEL_ID)
                         .setSmallIcon(R.drawable.venturus)
-                        .setContentTitle("Layonf Notification Test")
+                        .setContentTitle("layonf Notification Test")
                         .setContentText(getString(R.string.notifi_text))
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(getString(R.string.notifi_text)))
@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     public void sendNotification(View v) {
         CheckBox checkBox_postDelayed = (CheckBox) findViewById(R.id.checkBox_postDelay);
         CheckBox checkBox_StartActivity = (CheckBox) findViewById(R.id.checkBox_StartActivity);
+        CheckBox checkBox_fullScreen = (CheckBox) findViewById(R.id.checkBox_fullScreen);
         Spinner spinner_seconds = (Spinner) findViewById(R.id.spinner_seconds);
 
         //it doesn't work
@@ -87,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
             sendNotificationDelayed(v, delay);
         } else if (checkBox_StartActivity.isChecked()){
             sendStartActivityNotification();
+        } else if (checkBox_fullScreen.isChecked()){
+            sendFullScreenIntentNotification_Delay(v, 5000);
         } else {
             sendBaseNotification();
         }
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this, CHANNEL_ID)
                         .setSmallIcon(R.drawable.venturus)
-                        .setContentTitle("Layonf PendingIntent Notification Test")
+                        .setContentTitle("layonf PendingIntent Notification Test")
                         .setContentText(getString(R.string.notifi_text))
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(getString(R.string.notifi_text)))
@@ -121,7 +124,35 @@ public class MainActivity extends AppCompatActivity {
         builder.setContentIntent(resultPendingIntent);
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
+    }
 
+    public void sendFullScreenIntentNotification_Delay(View v, int delay) {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                sendFullScreenIntentNotification();
+            }
+        }, delay);
+    }
+
+    public void sendFullScreenIntentNotification() {
+        Intent fullScreenIntent = new Intent(this, ResultActivity.class);
+        PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(this, 0,
+                fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.venturus)
+                .setContentTitle("layonf fullScreen notification test")
+                .setContentText(getString(R.string.notifi_text))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_CALL)
+                //Use a full-screen
+                .setFullScreenIntent(fullScreenPendingIntent, true);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
 
     }
 }

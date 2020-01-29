@@ -83,5 +83,14 @@
         app:layout_constraintTop_toBottomOf="@id/checkBox_postDelay">
     </CheckBox>
 
+    <CheckBox
+        android:id="@+id/checkBox_fullScreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="FullScreen"
+        app:layout_constraintStart_toStartOf="@id/checkBox_StartActivity"
+        app:layout_constraintTop_toBottomOf="@id/checkBox_StartActivity">
+    </CheckBox>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
