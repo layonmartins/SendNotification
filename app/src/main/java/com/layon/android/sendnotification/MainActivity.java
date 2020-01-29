@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,14 +44,23 @@ public class MainActivity extends AppCompatActivity {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this, CHANNEL_ID)
                         .setSmallIcon(R.drawable.venturus)
-                        .setContentTitle("My Broadcast Notification")
+                        .setContentTitle("Layonf Notification Test")
                         .setContentText(getString(R.string.notifi_text))
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(getString(R.string.notifi_text)))
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
+        //Set flags:
+        Notification notification = builder.build();
+        //notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+        //notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        //notification.flags |= Notification.FLAG_ONGOING_EVENT;
+        //notification.flags |= Notification.FLAG_NO_CLEAR;
+        //notification.flags |= Notification.FLAG_LOCAL_ONLY;
+
+
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
+        notificationManager.notify(NOTIFICATION_ID, notification);
     }
 
     public void sendNotificationDelayed(View v, int delay) {
@@ -66,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         CheckBox checkBox_postDelayed = (CheckBox) findViewById(R.id.checkBox_postDelay);
         Spinner spinner_seconds = (Spinner) findViewById(R.id.spinner_seconds);
 
+        //it doesn't work
         int delay = Integer.parseInt(spinner_seconds.getSelectedItem().toString());
 
         if (checkBox_postDelayed.isChecked()){
