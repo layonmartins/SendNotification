@@ -76,14 +76,53 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendNotification(View v) {
+        // get config
         CheckBox checkBox_postDelayed = (CheckBox) findViewById(R.id.checkBox_postDelay);
         CheckBox checkBox_StartActivity = (CheckBox) findViewById(R.id.checkBox_StartActivity);
         CheckBox checkBox_fullScreen = (CheckBox) findViewById(R.id.checkBox_fullScreen);
         Spinner spinner_seconds = (Spinner) findViewById(R.id.spinner_seconds);
 
-        //it doesn't work
-        int delay = Integer.parseInt(spinner_seconds.getSelectedItem().toString());
+        //create channel and notification
+        createNotificationChannel();
 
+        final NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.venturus)
+                .setContentTitle("layonf notification test")
+                .setContentText(getString(R.string.notifi_text))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.notifi_text)));
+
+
+        //set the properties on notification:
+
+        //priority
+
+        //start result activity
+
+        //fullscreen
+
+        //postdelay
+        int delay = 0;
+        if(checkBox_postDelayed.isChecked()){
+            //it doesn't work
+            delay = Integer.parseInt(spinner_seconds.getSelectedItem().toString());
+        }
+
+
+        //post the notification
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //send notification
+                NotificationManagerCompat notificationManagerCompat =
+                        NotificationManagerCompat.from(getApplicationContext());
+                notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
+
+            }
+        }, delay);
+
+        //refactore this:
         if (checkBox_postDelayed.isChecked()){
             sendNotificationDelayed(v, delay);
         } else if (checkBox_StartActivity.isChecked()){
@@ -138,6 +177,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendFullScreenIntentNotification() {
         Intent fullScreenIntent = new Intent(this, ResultActivity.class);
+        //fullScreenIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //fullScreenIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
         PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(this, 0,
                 fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -153,6 +195,8 @@ public class MainActivity extends AppCompatActivity {
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
+
+        startActivity(fullScreenIntent);
 
     }
 }

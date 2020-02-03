@@ -24,20 +24,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Send Notification"
-        android:onClick="sendNotification"
-        android:textSize="16sp"
-        android:padding="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </Button>
-
     <CheckBox
         android:id="@+id/checkBox_postDelay"
         android:layout_width="wrap_content"
@@ -92,5 +78,18 @@
         app:layout_constraintStart_toStartOf="@id/checkBox_StartActivity"
         app:layout_constraintTop_toBottomOf="@id/checkBox_StartActivity">
     </CheckBox>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send Notification"
+        android:onClick="sendNotification"
+        android:textSize="16sp"
+        android:padding="20dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+    </Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
