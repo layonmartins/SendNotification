@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,10 +25,31 @@ public class MainActivity extends AppCompatActivity {
     private static final String CHANNEL_ID = "notification_test";
     private static final int NOTIFICATION_ID = 1234;
 
+    // create Notification configs variables
+    CheckBox checkBox_postDelayed;
+    CheckBox checkBox_StartActivity;
+    CheckBox checkBox_fullScreen;
+    Spinner spinner_seconds;
+    TextView textview_seconds;
+    CheckBox checkBox_ongoing;
+    CheckBox checkBox_flagnoclear;
+    CheckBox checkBox_autocancel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // get Notification configs references
+        checkBox_postDelayed = (CheckBox) findViewById(R.id.checkBox_postDelay);
+        checkBox_StartActivity = (CheckBox) findViewById(R.id.checkBox_StartActivity);
+        checkBox_fullScreen = (CheckBox) findViewById(R.id.checkBox_fullScreen);
+        spinner_seconds = (Spinner) findViewById(R.id.spinner_seconds);
+        spinner_seconds.setSelection(2);
+        textview_seconds = (TextView) findViewById(R.id.textview_seconds);
+        checkBox_ongoing = (CheckBox) findViewById(R.id.checkBox_ongoing);
+        checkBox_flagnoclear = (CheckBox) findViewById(R.id.checkBox_flagnoclear);
+        checkBox_autocancel = (CheckBox) findViewById(R.id.checkBox_autocancel);
     }
 
     public void createNotificationChannel() {
@@ -43,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //TODO disable landscape mode
+
+    //TODO maybe needed to delete this method
     public void sendBaseNotification() {
         createNotificationChannel();
         NotificationCompat.Builder builder =
@@ -67,15 +92,22 @@ public class MainActivity extends AppCompatActivity {
         notificationManager.notify(NOTIFICATION_ID, notification);
     }
 
+    //show the seconds spinner
+    public void onCheckBoxSecondsClicked(View v){
 
-    // refactoring...
+        if(checkBox_postDelayed.isChecked()){
+            spinner_seconds.setVisibility(View.VISIBLE);
+            textview_seconds.setVisibility(View.VISIBLE);
+
+        } else {
+            spinner_seconds.setVisibility(View.GONE);
+            textview_seconds.setVisibility(View.GONE);
+        }
+
+    }
+
+    //TODO refactoring...
     public void sendNotification(View v) {
-
-        // get Notification configs
-        CheckBox checkBox_postDelayed = (CheckBox) findViewById(R.id.checkBox_postDelay);
-        CheckBox checkBox_StartActivity = (CheckBox) findViewById(R.id.checkBox_StartActivity);
-        CheckBox checkBox_fullScreen = (CheckBox) findViewById(R.id.checkBox_fullScreen);
-        Spinner spinner_seconds = (Spinner) findViewById(R.id.spinner_seconds);
 
         // create a channel
         createNotificationChannel();
@@ -88,14 +120,10 @@ public class MainActivity extends AppCompatActivity {
                 .setContentText(getString(R.string.notifi_text))
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.notifi_text)));
 
+        // create notification the set flags
+        final Notification notification = builder.build();
 
         //set the properties on notification:
-
-        //priority
-
-        //start result activity
-
-        //fullscreen
 
         //postdelay
         int delay = 0;
@@ -109,7 +137,30 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        //post the notification
+        //TODO priority to do
+
+        //TODO start result activity to do
+
+        //TODO fullscreen doesn't work
+
+        // set ongoing
+        if (checkBox_ongoing.isChecked()){
+            notification.flags |= Notification.FLAG_ONGOING_EVENT;
+        }
+
+        // set Flag_NO_CLEAR
+        if (checkBox_flagnoclear.isChecked()){
+            notification.flags |= Notification.FLAG_NO_CLEAR;
+        }
+
+        //TODO the FLAG_AUTO_CANCEL doesn't work
+        if (checkBox_autocancel.isChecked()){
+            notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        }
+
+
+
+        // post the notification
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -117,12 +168,15 @@ public class MainActivity extends AppCompatActivity {
                 //send notification
                 NotificationManagerCompat notificationManagerCompat =
                         NotificationManagerCompat.from(getApplicationContext());
-                notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
+                notificationManagerCompat.notify(NOTIFICATION_ID, notification);
             }
         }, delay * 1000);
     }
 
-    //maybe needed to delete this method
+    //TODO remove notification method
+
+
+    //TODO maybe needed to delete this method
     public void sendStartActivityNotification() {
 
         //create channel
@@ -154,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
         notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
     }
 
-    //maybe needed to delete this method
+    //TODO maybe needed to delete this method
     public void sendFullScreenIntentNotification() {
         Intent fullScreenIntent = new Intent(this, ResultActivity.class);
         //fullScreenIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
