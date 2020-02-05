@@ -13,9 +13,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,26 +67,20 @@ public class MainActivity extends AppCompatActivity {
         notificationManager.notify(NOTIFICATION_ID, notification);
     }
 
-    public void sendNotificationDelayed(View v, int delay) {
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                sendBaseNotification();
-            }
-        }, delay);
-    }
 
+    // refactoring...
     public void sendNotification(View v) {
-        // get config
+
+        // get Notification configs
         CheckBox checkBox_postDelayed = (CheckBox) findViewById(R.id.checkBox_postDelay);
         CheckBox checkBox_StartActivity = (CheckBox) findViewById(R.id.checkBox_StartActivity);
         CheckBox checkBox_fullScreen = (CheckBox) findViewById(R.id.checkBox_fullScreen);
         Spinner spinner_seconds = (Spinner) findViewById(R.id.spinner_seconds);
 
-        //create channel and notification
+        // create a channel
         createNotificationChannel();
 
+        // create a Notification
         final NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.venturus)
@@ -104,8 +100,12 @@ public class MainActivity extends AppCompatActivity {
         //postdelay
         int delay = 0;
         if(checkBox_postDelayed.isChecked()){
-            //it doesn't work
             delay = Integer.parseInt(spinner_seconds.getSelectedItem().toString());
+            StringBuilder str = new StringBuilder();
+            str.append(getString(R.string.toast));
+            str.append(" " + Integer.toString(delay) + " seconds");
+            Toast toast = Toast.makeText(this, str.toString(), Toast.LENGTH_LONG);
+            toast.show();
         }
 
 
@@ -118,22 +118,11 @@ public class MainActivity extends AppCompatActivity {
                 NotificationManagerCompat notificationManagerCompat =
                         NotificationManagerCompat.from(getApplicationContext());
                 notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
-
             }
-        }, delay);
-
-        //refactore this:
-        if (checkBox_postDelayed.isChecked()){
-            sendNotificationDelayed(v, delay);
-        } else if (checkBox_StartActivity.isChecked()){
-            sendStartActivityNotification();
-        } else if (checkBox_fullScreen.isChecked()){
-            sendFullScreenIntentNotification_Delay(v, 5000);
-        } else {
-            sendBaseNotification();
-        }
+        }, delay * 1000);
     }
 
+    //maybe needed to delete this method
     public void sendStartActivityNotification() {
 
         //create channel
@@ -165,16 +154,7 @@ public class MainActivity extends AppCompatActivity {
         notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
     }
 
-    public void sendFullScreenIntentNotification_Delay(View v, int delay) {
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                sendFullScreenIntentNotification();
-            }
-        }, delay);
-    }
-
+    //maybe needed to delete this method
     public void sendFullScreenIntentNotification() {
         Intent fullScreenIntent = new Intent(this, ResultActivity.class);
         //fullScreenIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

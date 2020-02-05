@@ -18,7 +18,7 @@
         android:textSize="20sp"
 
         android:inputType="textPersonName"
-        android:text="Notification Config:"
+        android:text="Set Notification Config:"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,34 +28,33 @@
         android:id="@+id/checkBox_postDelay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textSize="16sp"
+        android:layout_marginTop="@dimen/margin_checkboxs"
+        android:textSize="@dimen/config_text"
         android:text="Send with postDelay -> "
         app:layout_constraintStart_toStartOf="@+id/editText"
         app:layout_constraintTop_toBottomOf="@+id/editText" />
 
     <Spinner
         android:id="@+id/spinner_seconds"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:entries="@array/seconds_array"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/checkBox_postDelay"
-        app:layout_constraintTop_toTopOf="@+id/checkBox_postDelay" />
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:text="seconds"
-        android:textSize="16sp"
+        android:entries="@array/seconds_array"
+        app:layout_constraintEnd_toEndOf="@id/textview_seconds"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/checkBox_postDelay"
+        app:layout_constraintBaseline_toBaselineOf="@id/checkBox_postDelay"/>
+
+    <TextView
+        android:id="@+id/textview_seconds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sec"
+        android:textSize="@dimen/config_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@id/spinner_seconds"
-        app:layout_constraintTop_toTopOf="@id/spinner_seconds">
+        app:layout_constraintBaseline_toBaselineOf="@id/spinner_seconds">
 
     </TextView>
 
@@ -63,8 +62,9 @@
         android:id="@+id/checkBox_StartActivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:text="Start ResultActivity"
+        android:textSize="@dimen/config_text"
+        android:text="Start ResultActivity on click"
+        android:layout_marginTop="@dimen/margin_checkboxs"
         app:layout_constraintStart_toStartOf="@id/checkBox_postDelay"
         app:layout_constraintTop_toBottomOf="@id/checkBox_postDelay">
     </CheckBox>
@@ -73,20 +73,21 @@
         android:id="@+id/checkBox_fullScreen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:text="FullScreen"
+        android:textSize="@dimen/config_text"
+        android:text="Enable FullScreen"
+        android:layout_marginTop="@dimen/margin_checkboxs"
         app:layout_constraintStart_toStartOf="@id/checkBox_StartActivity"
         app:layout_constraintTop_toBottomOf="@id/checkBox_StartActivity">
     </CheckBox>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Send Notification"
         android:onClick="sendNotification"
         android:textSize="16sp"
         android:padding="20dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
