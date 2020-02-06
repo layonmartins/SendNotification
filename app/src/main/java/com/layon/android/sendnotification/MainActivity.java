@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
             // get importance
             // TODO it doesn't work, check later
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_HIGH;
             if(checkBox_importance.isChecked()){
                 importance = getImportance(spinner_importance.getSelectedItem().toString());
                 Log.d("layonf importance: ", Integer.toString(importance));
@@ -151,8 +151,11 @@ public class MainActivity extends AppCompatActivity {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.notifi_text)));
 
         if(checkBox_group.isChecked()) {
-            builder.setGroup(GROUP_KEY_WORK_EMAIL);
-            NOTIFICATION_ID++;
+            //builder.setGroup(GROUP_KEY_WORK_EMAIL);
+            //NOTIFICATION_ID++;
+
+            sendGroupNotification();
+            return;
         }
 
         // create notification the set flags
@@ -208,34 +211,73 @@ public class MainActivity extends AppCompatActivity {
         }, delay * 1000);
     }
 
-    //TODO remove notification method
 
-    //TODO maybe needed to delete this method
+    //TODO refactoring this method to insert the logic in sendNotification()
     public void sendGroupNotification() {
         createNotificationChannel();
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(this, CHANNEL_ID)
+
+        Notification newMessageNotification1 =
+                new NotificationCompat.Builder(MainActivity.this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.venturus)
+                .setContentTitle("Jucelma")
+                .setContentText("You will not believe...")
+                .setGroup(GROUP_KEY_WORK_EMAIL)
+                .build();
+
+        Notification newMessageNotification2 =
+                new NotificationCompat.Builder(MainActivity.this, CHANNEL_ID)
                         .setSmallIcon(R.drawable.venturus)
-                        .setContentTitle("layonf Notification Test")
-                        .setContentText(getString(R.string.notifi_text))
-                        .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(getString(R.string.notifi_text)))
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                        .setContentTitle("Jucelma")
+                        .setContentText("My neighbor has changed...")
+                        .setGroup(GROUP_KEY_WORK_EMAIL)
+                        .build();
 
-        //Set flags:
-        Notification notification = builder.build();
-        //notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-        //notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        //notification.flags |= Notification.FLAG_ONGOING_EVENT;
-        //notification.flags |= Notification.FLAG_NO_CLEAR;
-        //notification.flags |= Notification.FLAG_LOCAL_ONLY;
+        Notification newMessageNotification3 =
+                new NotificationCompat.Builder(MainActivity.this, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.venturus)
+                        .setContentTitle("Creuza")
+                        .setContentText("Where did he live?")
+                        .setGroup(GROUP_KEY_WORK_EMAIL)
+                        .build();
+
+        Notification newMessageNotification4 =
+                new NotificationCompat.Builder(MainActivity.this, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.venturus)
+                        .setContentTitle("Jucelma")
+                        .setContentText("He is your neighbor now :)")
+                        .setGroup(GROUP_KEY_WORK_EMAIL)
+                        .build();
 
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(NOTIFICATION_ID, notification);
+        Notification summaryNotification =
+                new NotificationCompat.Builder(MainActivity.this, CHANNEL_ID)
+                .setContentTitle("Four new messages")
+                // set content text to support devices running API level < 24
+                // .setContentText("Two new messages")
+                .setSmallIcon(R.drawable.venturus)
+                // build summary info into InboxStyle template
+                .setStyle(new NotificationCompat.InboxStyle()
+                    .addLine("Jucelma")
+                    .addLine("Jucelma")
+                    .addLine("Creuza")
+                    .addLine("Creuza")
+                    .setBigContentTitle("4 new messages")
+                    .setSummaryText("jucelma@example.com"))
+                // specify which group this notification belongs to
+                .setGroup(GROUP_KEY_WORK_EMAIL)
+                // set this notification as the summary for the group
+                .setGroupSummary(true)
+                .build();
+
+        NotificationManagerCompat notificationMangerCompat = NotificationManagerCompat.from(this);
+        notificationMangerCompat.notify(12, newMessageNotification1);
+        notificationMangerCompat.notify(122, newMessageNotification2);
+        notificationMangerCompat.notify(123, newMessageNotification3);
+        notificationMangerCompat.notify(124, newMessageNotification4);
+        notificationMangerCompat.notify(111, summaryNotification);
     }
 
-    //TODO maybe needed to delete this method
+    //TODO refactoring this method to insert the logic in sendNotification()
     public void sendStartActivityNotification() {
 
         //create channel
@@ -267,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
         notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
     }
 
-    //TODO maybe needed to delete this method
+    //TODO refactoring this method to insert the logic in sendNotification()
     public void sendFullScreenIntentNotification() {
         Intent fullScreenIntent = new Intent(this, ResultActivity.class);
         //fullScreenIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
