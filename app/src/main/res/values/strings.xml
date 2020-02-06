@@ -11,5 +11,11 @@
         <item>60</item>
         <item>120</item>
     </string-array>
+    <string-array name="importance_array">
+        <item>HIGH</item>
+        <item>DEFAULT</item>
+        <item>LOW</item>
+        <item>MIN</item>
+    </string-array>
     <string name="toast">The notification will be post in </string>
 </resources>

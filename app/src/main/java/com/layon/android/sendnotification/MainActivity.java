@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -23,17 +24,22 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     private static final String CHANNEL_ID = "notification_test";
-    private static final int NOTIFICATION_ID = 1234;
+    private static int NOTIFICATION_ID = 1234;
+    private static final String GROUP_KEY_WORK_EMAIL = "com.android.layon.GROUP";
 
     // create Notification configs variables
     CheckBox checkBox_postDelayed;
     CheckBox checkBox_StartActivity;
     CheckBox checkBox_fullScreen;
     Spinner spinner_seconds;
+    Spinner spinner_importance;
     TextView textview_seconds;
     CheckBox checkBox_ongoing;
     CheckBox checkBox_flagnoclear;
     CheckBox checkBox_autocancel;
+    CheckBox checkBox_importance;
+    CheckBox checkBox_group;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,51 +51,75 @@ public class MainActivity extends AppCompatActivity {
         checkBox_StartActivity = (CheckBox) findViewById(R.id.checkBox_StartActivity);
         checkBox_fullScreen = (CheckBox) findViewById(R.id.checkBox_fullScreen);
         spinner_seconds = (Spinner) findViewById(R.id.spinner_seconds);
-        spinner_seconds.setSelection(2);
+        spinner_importance = (Spinner) findViewById(R.id.spinner_importance);
         textview_seconds = (TextView) findViewById(R.id.textview_seconds);
         checkBox_ongoing = (CheckBox) findViewById(R.id.checkBox_ongoing);
         checkBox_flagnoclear = (CheckBox) findViewById(R.id.checkBox_flagnoclear);
         checkBox_autocancel = (CheckBox) findViewById(R.id.checkBox_autocancel);
+        checkBox_importance = (CheckBox) findViewById(R.id.checkBox_importance);
+        checkBox_group = (CheckBox) findViewById(R.id.checkBox_group);
+
+        // set spinner_importance adapter
+        ArrayAdapter<CharSequence> adapterImportance = ArrayAdapter.createFromResource(this,
+                R.array.importance_array, android.R.layout.simple_dropdown_item_1line);
+        adapterImportance.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_importance.setAdapter(adapterImportance);
+        spinner_importance.setSelection(1);
+
+        // set spinner_seconds adapter
+        ArrayAdapter<CharSequence> adapterSeconds = ArrayAdapter.createFromResource(this,
+                R.array.seconds_array, android.R.layout.simple_dropdown_item_1line);
+        adapterImportance.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_seconds.setAdapter(adapterSeconds);
+        spinner_seconds.setSelection(2);
+
     }
 
     public void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             CharSequence name = "NotificationBroadcast";
             String description = "This is a broadcast notification fot test";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
+
+            // get importance
+            // TODO it doesn't work, check later
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            if(checkBox_importance.isChecked()){
+                importance = getImportance(spinner_importance.getSelectedItem().toString());
+                Log.d("layonf importance: ", Integer.toString(importance));
+            }
+
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
-
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
     }
 
+    public int getImportance(CharSequence importance) {
+        switch (importance.charAt(0)){
+            case 'H':
+                return NotificationManager.IMPORTANCE_HIGH;
+            case 'D':
+                return NotificationManager.IMPORTANCE_DEFAULT;
+            case 'L':
+                return NotificationManager.IMPORTANCE_LOW;
+            case 'M':
+                return NotificationManager.IMPORTANCE_MIN;
+            default:
+                return NotificationManager.IMPORTANCE_DEFAULT;
+        }
+    }
+
     //TODO disable landscape mode
 
-    //TODO maybe needed to delete this method
-    public void sendBaseNotification() {
-        createNotificationChannel();
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(this, CHANNEL_ID)
-                        .setSmallIcon(R.drawable.venturus)
-                        .setContentTitle("layonf Notification Test")
-                        .setContentText(getString(R.string.notifi_text))
-                        .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(getString(R.string.notifi_text)))
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+    //show the importance spinner
+    public void onCheckBoxImportanceClicked(View v){
+        if(checkBox_importance.isChecked()){
+            spinner_importance.setVisibility(View.VISIBLE);
+        } else {
+            spinner_importance.setVisibility(View.GONE);
+        }
 
-        //Set flags:
-        Notification notification = builder.build();
-        //notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-        //notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        //notification.flags |= Notification.FLAG_ONGOING_EVENT;
-        //notification.flags |= Notification.FLAG_NO_CLEAR;
-        //notification.flags |= Notification.FLAG_LOCAL_ONLY;
-
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(NOTIFICATION_ID, notification);
     }
 
     //show the seconds spinner
@@ -119,6 +149,11 @@ public class MainActivity extends AppCompatActivity {
                 .setContentTitle("layonf notification test")
                 .setContentText(getString(R.string.notifi_text))
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.notifi_text)));
+
+        if(checkBox_group.isChecked()) {
+            builder.setGroup(GROUP_KEY_WORK_EMAIL);
+            NOTIFICATION_ID++;
+        }
 
         // create notification the set flags
         final Notification notification = builder.build();
@@ -175,6 +210,30 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO remove notification method
 
+    //TODO maybe needed to delete this method
+    public void sendGroupNotification() {
+        createNotificationChannel();
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.venturus)
+                        .setContentTitle("layonf Notification Test")
+                        .setContentText(getString(R.string.notifi_text))
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(getString(R.string.notifi_text)))
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        //Set flags:
+        Notification notification = builder.build();
+        //notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+        //notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        //notification.flags |= Notification.FLAG_ONGOING_EVENT;
+        //notification.flags |= Notification.FLAG_NO_CLEAR;
+        //notification.flags |= Notification.FLAG_LOCAL_ONLY;
+
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(NOTIFICATION_ID, notification);
+    }
 
     //TODO maybe needed to delete this method
     public void sendStartActivityNotification() {

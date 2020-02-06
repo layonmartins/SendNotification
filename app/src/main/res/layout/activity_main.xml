@@ -26,6 +26,28 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
+        android:id="@+id/checkBox_importance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_checkboxs"
+        android:textSize="@dimen/config_text"
+        android:text="Set Importance"
+        android:onClick="onCheckBoxImportanceClicked"
+        app:layout_constraintStart_toStartOf="@+id/editText"
+        app:layout_constraintTop_toBottomOf="@+id/editText" />
+
+    <Spinner
+        android:id="@+id/spinner_importance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@id/textview_seconds"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/checkBox_importance"
+        app:layout_constraintBaseline_toBaselineOf="@id/checkBox_importance"/>
+
+    <CheckBox
         android:id="@+id/checkBox_postDelay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,14 +56,13 @@
         android:text="Send with postDelay"
         android:onClick="onCheckBoxSecondsClicked"
         app:layout_constraintStart_toStartOf="@+id/editText"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toBottomOf="@+id/checkBox_importance" />
 
     <Spinner
         android:id="@+id/spinner_seconds"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:entries="@array/seconds_array"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/textview_seconds"
         app:layout_constraintHorizontal_bias="0.0"
@@ -115,6 +136,17 @@
         android:layout_marginTop="@dimen/margin_checkboxs"
         app:layout_constraintStart_toStartOf="@id/checkBox_StartActivity"
         app:layout_constraintTop_toBottomOf="@id/checkBox_flagnoclear">
+    </CheckBox>
+
+    <CheckBox
+        android:id="@+id/checkBox_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/config_text"
+        android:text="Set Group"
+        android:layout_marginTop="@dimen/margin_checkboxs"
+        app:layout_constraintStart_toStartOf="@id/checkBox_StartActivity"
+        app:layout_constraintTop_toBottomOf="@id/checkBox_autocancel">
     </CheckBox>
 
     <Button
