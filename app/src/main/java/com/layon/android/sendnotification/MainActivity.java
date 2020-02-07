@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.RemoteViews;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     CheckBox checkBox_autocancel;
     CheckBox checkBox_importance;
     CheckBox checkBox_group;
+    CheckBox checkBox_custom;
 
 
     @Override
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         checkBox_autocancel = (CheckBox) findViewById(R.id.checkBox_autocancel);
         checkBox_importance = (CheckBox) findViewById(R.id.checkBox_importance);
         checkBox_group = (CheckBox) findViewById(R.id.checkBox_group);
+        checkBox_custom = (CheckBox) findViewById(R.id.checkBox_custom);
 
         // set spinner_importance adapter
         ArrayAdapter<CharSequence> adapterImportance = ArrayAdapter.createFromResource(this,
@@ -155,6 +158,14 @@ public class MainActivity extends AppCompatActivity {
             //NOTIFICATION_ID++;
 
             sendGroupNotification();
+            return;
+        }
+
+        if(checkBox_custom.isChecked()) {
+            //builder.setGroup(GROUP_KEY_WORK_EMAIL);
+            //NOTIFICATION_ID++;
+            Log.d("layonf", "sendCustomNotification");
+            sendCustomNotification();
             return;
         }
 
@@ -275,6 +286,30 @@ public class MainActivity extends AppCompatActivity {
         notificationMangerCompat.notify(123, newMessageNotification3);
         notificationMangerCompat.notify(124, newMessageNotification4);
         notificationMangerCompat.notify(111, summaryNotification);
+    }
+
+
+    //TODO refactoring this method to insert the logic in sendNotification()
+    public void sendCustomNotification() {
+
+        // create a channel
+        createNotificationChannel();
+
+        // Get the layout to use in the custom notification
+        RemoteViews notificationLayout = new RemoteViews(getPackageName(), R.layout.notification_custom);
+        RemoteViews notificationLayoutExpanded = new RemoteViews(getPackageName(), R.layout.notification_custom_expanded);
+
+        // Apply the layouts to the notification
+        Notification customNotification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.venturus)
+                .setStyle(new NotificationCompat.DecoratedCustomViewStyle()) //remove line if you don't want that system insert options like (smallIcon, title, buttomExpanded)
+                .setCustomContentView(notificationLayout)
+                .setCustomBigContentView(notificationLayoutExpanded)
+                .build();
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        notificationManagerCompat.notify(75678, customNotification);
+
     }
 
     //TODO refactoring this method to insert the logic in sendNotification()

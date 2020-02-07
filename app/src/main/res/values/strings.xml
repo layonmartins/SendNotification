@@ -18,4 +18,5 @@
         <item>MIN</item>
     </string-array>
     <string name="toast">The notification will be post in </string>
+    <string name="custom_notifi">If you need a custom layout, you can apply NotificationCompat.DecoratedCustomViewStyle to your notification. This API allows you to provide a custom layout for the content area normally occupied by the title and text content, while still using system decorations for the notification icon, timestamp, sub-text, and action buttons.</string>
 </resources>

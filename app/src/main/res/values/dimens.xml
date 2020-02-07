@@ -2,4 +2,5 @@
 <resources>
     <dimen name="config_text">20sp</dimen>
     <dimen name="margin_checkboxs">10dp</dimen>
+    <dimen name="notifi_text">14sp</dimen>
 </resources>
