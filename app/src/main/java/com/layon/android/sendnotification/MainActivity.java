@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     CheckBox checkBox_importance;
     CheckBox checkBox_group;
     CheckBox checkBox_custom;
+    CheckBox checkBox_category;
+    Spinner spinner_category;
 
 
     @Override
@@ -61,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         checkBox_importance = (CheckBox) findViewById(R.id.checkBox_importance);
         checkBox_group = (CheckBox) findViewById(R.id.checkBox_group);
         checkBox_custom = (CheckBox) findViewById(R.id.checkBox_custom);
+        checkBox_category = (CheckBox) findViewById(R.id.checkBox_category);
+        spinner_category = (Spinner) findViewById(R.id.spinner_category);
 
         // set spinner_importance adapter
         ArrayAdapter<CharSequence> adapterImportance = ArrayAdapter.createFromResource(this,
@@ -75,6 +79,13 @@ public class MainActivity extends AppCompatActivity {
         adapterImportance.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_seconds.setAdapter(adapterSeconds);
         spinner_seconds.setSelection(2);
+
+        // set spinner_category adapter
+        ArrayAdapter<CharSequence> adapterCategory = ArrayAdapter.createFromResource(this,
+                R.array.category_array, android.R.layout.simple_dropdown_item_1line);
+        adapterCategory.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_category.setAdapter(adapterCategory);
+        spinner_category.setSelection(1);
 
     }
 
@@ -113,6 +124,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public String getCategory(CharSequence importance) {
+        switch (importance.toString()){
+            case "call":
+                return Notification.CATEGORY_CALL;
+            case "msg":
+                return Notification.CATEGORY_MESSAGE;
+            case "email":
+                return Notification.CATEGORY_EMAIL;
+            case "event":
+                return Notification.CATEGORY_EVENT;
+            case "alarm":
+                return Notification.CATEGORY_ALARM;
+            case "sys":
+                return Notification.CATEGORY_SYSTEM;
+            case "service":
+                return Notification.CATEGORY_SERVICE;
+            case "reminder":
+                return Notification.CATEGORY_REMINDER;
+            default:
+                return "notification";
+        }
+    }
+
     //TODO disable landscape mode
 
     //show the importance spinner
@@ -127,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
 
     //show the seconds spinner
     public void onCheckBoxSecondsClicked(View v){
-
         if(checkBox_postDelayed.isChecked()){
             spinner_seconds.setVisibility(View.VISIBLE);
             textview_seconds.setVisibility(View.VISIBLE);
@@ -135,6 +168,15 @@ public class MainActivity extends AppCompatActivity {
         } else {
             spinner_seconds.setVisibility(View.GONE);
             textview_seconds.setVisibility(View.GONE);
+        }
+    }
+
+    //show the category spinner
+    public void onCheckBoxCategoryClicked(View v){
+        if(checkBox_category.isChecked()){
+            spinner_category.setVisibility(View.VISIBLE);
+        } else {
+            spinner_category.setVisibility(View.GONE);
         }
 
     }
@@ -152,6 +194,12 @@ public class MainActivity extends AppCompatActivity {
                 .setContentTitle("layonf notification test")
                 .setContentText(getString(R.string.notifi_text))
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.notifi_text)));
+
+        // set category
+        if(checkBox_category.isChecked()){
+            builder.setCategory(getCategory(spinner_category.getSelectedItem().toString()));
+        }
+
 
         if(checkBox_group.isChecked()) {
             //builder.setGroup(GROUP_KEY_WORK_EMAIL);
