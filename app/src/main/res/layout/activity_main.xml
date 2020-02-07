@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="@id/textview_seconds"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/checkBox_importance"
         app:layout_constraintBaseline_toBaselineOf="@id/checkBox_importance"/>
@@ -71,9 +71,11 @@
 
     <TextView
         android:id="@+id/textview_seconds"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="sec"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:visibility="gone"
         android:textSize="@dimen/config_text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -154,11 +156,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/config_text"
-        android:text="Send Custom Notification"
+        android:text="Custom Notification"
         android:layout_marginTop="@dimen/margin_checkboxs"
         app:layout_constraintStart_toStartOf="@id/checkBox_StartActivity"
         app:layout_constraintTop_toBottomOf="@id/checkBox_group">
     </CheckBox>
+
+    <CheckBox
+        android:id="@+id/checkBox_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/config_text"
+        android:text="Set Category"
+        android:onClick="onCheckBoxCategoryClicked"
+        android:layout_marginTop="@dimen/margin_checkboxs"
+        app:layout_constraintStart_toStartOf="@id/checkBox_StartActivity"
+        app:layout_constraintTop_toBottomOf="@id/checkBox_custom">
+    </CheckBox>
+
+    <Spinner
+        android:id="@+id/spinner_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:visibility="gone"
+        app:layout_constraintBaseline_toBaselineOf="@id/checkBox_category"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/checkBox_category"
+        app:layout_constraintEnd_toEndOf="parent">
+
+    </Spinner>
 
     <Button
         android:layout_width="match_parent"
