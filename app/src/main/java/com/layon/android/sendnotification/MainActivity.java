@@ -10,6 +10,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import android.widget.RemoteViews;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.graphics.BitmapFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,12 +45,17 @@ public class MainActivity extends AppCompatActivity {
     CheckBox checkBox_custom;
     CheckBox checkBox_category;
     Spinner spinner_category;
+    CheckBox checkBox_colorized;
+    Spinner spinner_style;
+    CheckBox checkBox_style;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // TODO is to large list, create list like a RecycleView.
 
         // get Notification configs references
         checkBox_postDelayed = (CheckBox) findViewById(R.id.checkBox_postDelay);
@@ -65,6 +72,11 @@ public class MainActivity extends AppCompatActivity {
         checkBox_custom = (CheckBox) findViewById(R.id.checkBox_custom);
         checkBox_category = (CheckBox) findViewById(R.id.checkBox_category);
         spinner_category = (Spinner) findViewById(R.id.spinner_category);
+        checkBox_colorized = (CheckBox) findViewById(R.id.checkBox_colorized);
+        checkBox_style = (CheckBox) findViewById(R.id.checkBox_style);
+        spinner_style = (Spinner) findViewById(R.id.spinner_style);
+
+        // TODO continue here the style customization
 
         // set spinner_importance adapter
         ArrayAdapter<CharSequence> adapterImportance = ArrayAdapter.createFromResource(this,
@@ -86,6 +98,13 @@ public class MainActivity extends AppCompatActivity {
         adapterCategory.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_category.setAdapter(adapterCategory);
         spinner_category.setSelection(1);
+
+        // set spinner_style adapter
+        ArrayAdapter<CharSequence> adapterStyle = ArrayAdapter.createFromResource(this,
+                R.array.style_array, android.R.layout.simple_dropdown_item_1line);
+        adapterStyle.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_style.setAdapter(adapterStyle);
+        spinner_style.setSelection(1);
 
     }
 
@@ -124,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // get the String Category of the notification
     public String getCategory(CharSequence importance) {
         switch (importance.toString()){
             case "call":
@@ -145,6 +165,20 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return "notification";
         }
+    }
+
+    // get the style of the notification return the correct class.
+    public NotificationCompat.Style getStyle(CharSequence style) {
+        switch (style.toString()) {
+            case "BigTextStyle":
+                return new NotificationCompat.BigTextStyle().bigText(getString(R.string.notifi_text));
+            case "BigPictureStyle":
+                return new NotificationCompat.BigPictureStyle().bigPicture(BitmapFactory.decodeResource(getResources(), R.drawable.bigcat));
+            case "DecoratedCustomViewStyle":
+                return new NotificationCompat.DecoratedCustomViewStyle(); // It doesn't work wihtou set the custom Content View
+            // TODO finished the other styles of notifications...
+        }
+        return null;
     }
 
     //TODO disable landscape mode
@@ -181,6 +215,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //show the style spinner
+    public void onCheckBoxStyleClicked(View v){
+        if(checkBox_style.isChecked()){
+            spinner_style.setVisibility(View.VISIBLE);
+        } else {
+            spinner_style.setVisibility(View.GONE);
+        }
+
+    }
+
     //TODO refactoring...
     public void sendNotification(View v) {
 
@@ -195,11 +239,27 @@ public class MainActivity extends AppCompatActivity {
                 .setContentText(getString(R.string.notifi_text))
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.notifi_text)));
 
+
+        // TODO create a check box with a Spinner to chose the notificaiton style
+        // Doing
+
         // set category
         if(checkBox_category.isChecked()){
             builder.setCategory(getCategory(spinner_category.getSelectedItem().toString()));
         }
 
+        // set style
+        if(checkBox_style.isChecked()) {
+            builder.setStyle(getStyle(spinner_style.getSelectedItem().toString()));
+        }
+
+
+        // set colorized
+        if(checkBox_colorized.isChecked()) {
+            Log.d("layonf", "colorized");
+            builder.setColorized(true);
+            builder.setColor(Color.BLUE);
+        }
 
         if(checkBox_group.isChecked()) {
             //builder.setGroup(GROUP_KEY_WORK_EMAIL);

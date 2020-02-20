@@ -187,6 +187,42 @@
 
     </Spinner>
 
+    <CheckBox
+        android:id="@+id/checkBox_colorized"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/config_text"
+        android:text="Set Colorized"
+        android:layout_marginTop="@dimen/margin_checkboxs"
+        app:layout_constraintStart_toStartOf="@id/checkBox_category"
+        app:layout_constraintTop_toBottomOf="@id/checkBox_category">
+    </CheckBox>
+
+    <CheckBox
+        android:id="@+id/checkBox_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/config_text"
+        android:text="Set Style"
+        android:onClick="onCheckBoxStyleClicked"
+        android:layout_marginTop="@dimen/margin_checkboxs"
+        app:layout_constraintStart_toStartOf="@id/checkBox_StartActivity"
+        app:layout_constraintTop_toBottomOf="@id/checkBox_colorized">
+    </CheckBox>
+
+    <Spinner
+        android:id="@+id/spinner_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:visibility="visible"
+        app:layout_constraintBaseline_toBaselineOf="@id/checkBox_style"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/checkBox_style"
+        app:layout_constraintEnd_toEndOf="parent">
+
+    </Spinner>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -194,7 +230,7 @@
         android:onClick="sendNotification"
         android:textSize="16sp"
         android:padding="20dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
