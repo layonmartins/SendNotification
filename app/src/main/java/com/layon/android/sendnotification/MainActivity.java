@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private static int NOTIFICATION_ID = 1234;
     private static final String GROUP_KEY_WORK_EMAIL = "com.android.layon.GROUP";
 
+    private static String contentTitleNotification;
+
     // create Notification configs variables
     CheckBox checkBox_postDelayed;
     CheckBox checkBox_StartActivity;
@@ -175,7 +177,13 @@ public class MainActivity extends AppCompatActivity {
             case "BigPictureStyle":
                 return new NotificationCompat.BigPictureStyle().bigPicture(BitmapFactory.decodeResource(getResources(), R.drawable.bigcat));
             case "DecoratedCustomViewStyle":
-                return new NotificationCompat.DecoratedCustomViewStyle(); // It doesn't work wihtou set the custom Content View
+                return new NotificationCompat.DecoratedCustomViewStyle(); // It doesn't work without set the custom Content View
+            case "InboxStyle":
+                contentTitleNotification = "3 New message from fulano de tal";
+                return new NotificationCompat.InboxStyle()
+                        .addLine("Fulano de tal - Hi whats up man?")
+                        .addLine("Eu - I am ok and you?")
+                        .addLine("Fulano de tal - Sextouuuuuu!");
             // TODO finished the other styles of notifications...
         }
         return null;
@@ -228,6 +236,9 @@ public class MainActivity extends AppCompatActivity {
     //TODO refactoring...
     public void sendNotification(View v) {
 
+        // set default title
+        contentTitleNotification = "default notification title";
+
         // create a channel
         createNotificationChannel();
 
@@ -235,12 +246,10 @@ public class MainActivity extends AppCompatActivity {
         final NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.venturus)
-                .setContentTitle("layonf notification test")
-                .setContentText(getString(R.string.notifi_text))
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.notifi_text)));
+                .setContentText(getString(R.string.notifi_text));
 
 
-        // TODO create a check box with a Spinner to chose the notificaiton style
+        // TODO create a check box with a Spinner to chose the notification style
         // Doing
 
         // set category
@@ -251,8 +260,11 @@ public class MainActivity extends AppCompatActivity {
         // set style
         if(checkBox_style.isChecked()) {
             builder.setStyle(getStyle(spinner_style.getSelectedItem().toString()));
+        } else {
+            builder.setStyle(getStyle("BigTextStyle")); //default
         }
 
+        builder.setContentTitle(contentTitleNotification); //update the title content
 
         // set colorized
         if(checkBox_colorized.isChecked()) {
@@ -477,5 +489,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(fullScreenIntent);
 
     }
+
+    //TODO create a game notification, enabled DND and create a channel that bypass dnd, so send many notification that user has
+    //to touch to interact e win the game.
 }
 
