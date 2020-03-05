@@ -7,23 +7,19 @@
     android:layout_margin="10dp"
     tools:context=".MainActivity">
 
-
-    <TextView
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:paddingStart="5dp"
-        android:ems="10"
-        android:textSize="20sp"
-
-        android:inputType="textPersonName"
-        android:text="Set Notification Config:"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+    <ScrollView
+        android:id="@+id/scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/send_button">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/scrollConfigs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
     <CheckBox
         android:id="@+id/checkBox_importance"
@@ -33,8 +29,8 @@
         android:textSize="@dimen/config_text"
         android:text="Set Importance"
         android:onClick="onCheckBoxImportanceClicked"
-        app:layout_constraintStart_toStartOf="@+id/editText"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/spinner_importance"
@@ -223,7 +219,12 @@
 
     </Spinner>
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
+
     <Button
+        android:id="@+id/send_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Send Notification"
