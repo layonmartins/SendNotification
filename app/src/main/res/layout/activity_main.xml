@@ -11,6 +11,7 @@
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@id/send_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +52,7 @@
                 android:onClick="onCheckBoxSecondsClicked"
                 android:text="Send with postDelay"
                 android:textSize="@dimen/config_text"
-                app:layout_constraintStart_toStartOf="@+id/editText"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/checkBox_importance" />
 
             <Spinner
@@ -209,6 +210,39 @@
 
             </Spinner>
 
+            <CheckBox
+                android:id="@+id/checkBox_channelId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_checkboxs"
+                android:onClick="onCheckBoxchannelIdClicked"
+                android:text="Set Channel ID"
+                android:textSize="@dimen/config_text"
+                app:layout_constraintStart_toStartOf="@id/checkBox_StartActivity"
+                app:layout_constraintTop_toBottomOf="@id/checkBox_style"></CheckBox>
+            
+            <LinearLayout
+                android:id="@+id/channelIdControls"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toEndOf="@id/checkBox_channelId"
+                app:layout_constraintBaseline_toBaselineOf="@id/checkBox_channelId"
+                app:layout_constraintEnd_toEndOf="parent">
+
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/checkBox_notificationId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_checkboxs"
+                android:onClick="onCheckBoxnotificationIdClicked"
+                android:text="Set Notification ID"
+                android:textSize="@dimen/config_text"
+                app:layout_constraintStart_toStartOf="@id/checkBox_StartActivity"
+                app:layout_constraintTop_toBottomOf="@id/checkBox_channelId"></CheckBox>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
@@ -217,7 +251,6 @@
         android:id="@+id/send_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:onClick="sendNotification"
         android:padding="20dp"
         android:text="Send Notification"

@@ -230,7 +230,24 @@ public class MainActivity extends AppCompatActivity {
         } else {
             spinner_style.setVisibility(View.GONE);
         }
+    }
 
+    //TODO show the channelId something
+    public void onCheckBoxchannelIdClicked(View v){
+        if(checkBox_style.isChecked()){
+
+        } else {
+
+        }
+    }
+
+    //TODO show the channelId something
+    public void onCheckBoxnotificationIdClicked(View v){
+        if(checkBox_style.isChecked()){
+
+        } else {
+
+        }
     }
 
     //TODO refactoring...
