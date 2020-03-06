@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SendNotification</string>
     <string name="notifi_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Murenam te accusante defenderem. Sedulo, inquam, faciam. Philosophi autem in suis lectulis plerumque moriuntur. Honesta oratio, Socratica, Platonis etiam. Is ita vivebat, ut nulla tam exquisita posset inveniri voluptas, qua non abundaret. Nunc omni virtuti vitium contrario nomine opponitur. Duo Reges: constructio interrete.</string>
+    <string name="notifi_text2">Layonf ipsum dolor sit amet, consectetur adipiscing elit. Murenam te accusante defenderem. Sedulo, inquam, faciam. Philosophi autem in suis lectulis plerumque moriuntur. Honesta oratio, Socratica, Platonis etiam. Is ita vivebat, ut nulla tam exquisita posset inveniri voluptas, qua non abundaret. Nunc omni virtuti vitium contrario nomine opponitur. Duo Reges: constructio interrete.</string>
     <string-array name="seconds_array">
         <item>1</item>
         <item>2</item>

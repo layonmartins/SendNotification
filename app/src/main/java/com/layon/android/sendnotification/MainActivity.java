@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -26,8 +27,8 @@ import android.graphics.BitmapFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String CHANNEL_ID = "notification_test";
-    private static int NOTIFICATION_ID = 1234;
+    private static int CHANNEL_ID = 1;
+    private static int NOTIFICATION_ID = 1;
     private static final String GROUP_KEY_WORK_EMAIL = "com.android.layon.GROUP";
 
     private static String contentTitleNotification;
@@ -50,6 +51,12 @@ public class MainActivity extends AppCompatActivity {
     CheckBox checkBox_colorized;
     Spinner spinner_style;
     CheckBox checkBox_style;
+    CheckBox checkBox_channelId;
+    CheckBox checkBox_notificationId;
+    View channelIdControls;
+    View notificationIdControls;
+    TextView txt_channelId;
+    TextView txt_notificationId;
 
 
     @Override
@@ -77,6 +84,12 @@ public class MainActivity extends AppCompatActivity {
         checkBox_colorized = (CheckBox) findViewById(R.id.checkBox_colorized);
         checkBox_style = (CheckBox) findViewById(R.id.checkBox_style);
         spinner_style = (Spinner) findViewById(R.id.spinner_style);
+        checkBox_channelId = (CheckBox) findViewById(R.id.checkBox_channelId);
+        checkBox_notificationId = (CheckBox) findViewById(R.id.checkBox_notificationId);
+        channelIdControls = (LinearLayout) findViewById(R.id.channelIdControls);
+        notificationIdControls = (LinearLayout) findViewById(R.id.notificationIdControls);
+        txt_channelId = (TextView) findViewById(R.id.txt_channelId);
+        txt_notificationId = (TextView) findViewById(R.id.txt_notificationId);
 
         // TODO continue here the style customization
 
@@ -108,6 +121,10 @@ public class MainActivity extends AppCompatActivity {
         spinner_style.setAdapter(adapterStyle);
         spinner_style.setSelection(1);
 
+        //set default ids
+        txt_channelId.setText(Integer.toString(CHANNEL_ID));
+        txt_notificationId.setText(Integer.toString(NOTIFICATION_ID));
+
     }
 
     public void createNotificationChannel() {
@@ -123,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("layonf importance: ", Integer.toString(importance));
             }
 
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            NotificationChannel channel = new NotificationChannel(Integer.toString(CHANNEL_ID), name, importance);
             channel.setDescription(description);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
@@ -234,21 +251,43 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO show the channelId something
     public void onCheckBoxchannelIdClicked(View v){
-        if(checkBox_style.isChecked()){
-
+        if(checkBox_channelId.isChecked()){
+            channelIdControls.setVisibility(View.VISIBLE);
         } else {
-
+            channelIdControls.setVisibility(View.GONE);
         }
     }
 
     //TODO show the channelId something
     public void onCheckBoxnotificationIdClicked(View v){
-        if(checkBox_style.isChecked()){
-
+        if(checkBox_notificationId.isChecked()){
+            notificationIdControls.setVisibility(View.VISIBLE);
         } else {
-
+            notificationIdControls.setVisibility(View.GONE);
         }
     }
+
+
+    public void channelIdMinus(View v){
+        CHANNEL_ID--;
+        txt_channelId.setText(Integer.toString(CHANNEL_ID));
+    }
+
+    public void channelIdPlus(View v){
+        CHANNEL_ID++;
+        txt_channelId.setText(Integer.toString(CHANNEL_ID));
+    }
+
+    public void notificationIdMinus(View v) {
+        NOTIFICATION_ID--;
+        txt_notificationId.setText(Integer.toString(NOTIFICATION_ID));
+    }
+
+    public void notificationIdPlus(View v) {
+        NOTIFICATION_ID++;
+        txt_notificationId.setText(Integer.toString(NOTIFICATION_ID));
+    }
+
 
     //TODO refactoring...
     public void sendNotification(View v) {
@@ -261,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
 
         // create a Notification
         final NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(this, CHANNEL_ID)
+                new NotificationCompat.Builder(this, Integer.toString(CHANNEL_ID))
                 .setSmallIcon(R.drawable.venturus)
                 .setContentText(getString(R.string.notifi_text));
 
@@ -280,8 +319,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             builder.setStyle(getStyle("BigTextStyle")); //default
         }
-
-        builder.setContentTitle(contentTitleNotification); //update the title content
 
         // set colorized
         if(checkBox_colorized.isChecked()) {
@@ -344,7 +381,9 @@ public class MainActivity extends AppCompatActivity {
             notification.flags |= Notification.FLAG_AUTO_CANCEL;
         }
 
-
+        //Update the title of the notification with Ids
+        CharSequence charSequence = "Notification_Id: " + NOTIFICATION_ID + " - Channel_Id: " + CHANNEL_ID;
+        notification.extras.putCharSequence(Notification.EXTRA_TITLE, charSequence);
 
         // post the notification
         Handler handler = new Handler();
@@ -360,12 +399,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     //TODO refactoring this method to insert the logic in sendNotification()
     public void sendGroupNotification() {
         createNotificationChannel();
 
         Notification newMessageNotification1 =
-                new NotificationCompat.Builder(MainActivity.this, CHANNEL_ID)
+                new NotificationCompat.Builder(MainActivity.this, Integer.toString(CHANNEL_ID))
                 .setSmallIcon(R.drawable.venturus)
                 .setContentTitle("Jucelma")
                 .setContentText("You will not believe...")
@@ -373,7 +413,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         Notification newMessageNotification2 =
-                new NotificationCompat.Builder(MainActivity.this, CHANNEL_ID)
+                new NotificationCompat.Builder(MainActivity.this, Integer.toString(CHANNEL_ID))
                         .setSmallIcon(R.drawable.venturus)
                         .setContentTitle("Jucelma")
                         .setContentText("My neighbor has changed...")
@@ -381,7 +421,7 @@ public class MainActivity extends AppCompatActivity {
                         .build();
 
         Notification newMessageNotification3 =
-                new NotificationCompat.Builder(MainActivity.this, CHANNEL_ID)
+                new NotificationCompat.Builder(MainActivity.this, Integer.toString(CHANNEL_ID))
                         .setSmallIcon(R.drawable.venturus)
                         .setContentTitle("Creuza")
                         .setContentText("Where did he live?")
@@ -389,7 +429,7 @@ public class MainActivity extends AppCompatActivity {
                         .build();
 
         Notification newMessageNotification4 =
-                new NotificationCompat.Builder(MainActivity.this, CHANNEL_ID)
+                new NotificationCompat.Builder(MainActivity.this, Integer.toString(CHANNEL_ID))
                         .setSmallIcon(R.drawable.venturus)
                         .setContentTitle("Jucelma")
                         .setContentText("He is your neighbor now :)")
@@ -398,7 +438,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         Notification summaryNotification =
-                new NotificationCompat.Builder(MainActivity.this, CHANNEL_ID)
+                new NotificationCompat.Builder(MainActivity.this, Integer.toString(CHANNEL_ID))
                 .setContentTitle("Four new messages")
                 // set content text to support devices running API level < 24
                 // .setContentText("Two new messages")
@@ -437,7 +477,7 @@ public class MainActivity extends AppCompatActivity {
         RemoteViews notificationLayoutExpanded = new RemoteViews(getPackageName(), R.layout.notification_custom_expanded);
 
         // Apply the layouts to the notification
-        Notification customNotification = new NotificationCompat.Builder(this, CHANNEL_ID)
+        Notification customNotification = new NotificationCompat.Builder(this, Integer.toString(CHANNEL_ID))
                 .setSmallIcon(R.drawable.venturus)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle()) //remove line if you don't want that system insert options like (smallIcon, title, buttomExpanded)
                 .setCustomContentView(notificationLayout)
@@ -457,10 +497,10 @@ public class MainActivity extends AppCompatActivity {
 
         //create notification
         NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(this, CHANNEL_ID)
+                new NotificationCompat.Builder(this, Integer.toString(CHANNEL_ID))
                         .setSmallIcon(R.drawable.venturus)
                         .setContentTitle("layonf PendingIntent Notification Test")
-                        .setContentText(getString(R.string.notifi_text))
+                        //.setContentText(getString(R.string.notifi_text))
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(getString(R.string.notifi_text)))
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT);
@@ -491,10 +531,10 @@ public class MainActivity extends AppCompatActivity {
                 fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(this, CHANNEL_ID)
+                new NotificationCompat.Builder(this, Integer.toString(CHANNEL_ID))
                 .setSmallIcon(R.drawable.venturus)
                 .setContentTitle("layonf fullScreen notification test")
-                .setContentText(getString(R.string.notifi_text))
+                //.setContentText(getString(R.string.notifi_text))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_CALL)
                 //Use a full-screen
