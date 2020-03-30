@@ -129,8 +129,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            CharSequence name = "NotificationBroadcast";
-            String description = "This is a broadcast notification fot test";
+            CharSequence name = "SendNotificationChannel";
+            String description = "This is a channel of the SendNotification app";
 
             // get importance
             // TODO it doesn't work, check later
