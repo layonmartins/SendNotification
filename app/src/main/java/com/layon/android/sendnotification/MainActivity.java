@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     View notificationIdControls;
     TextView txt_channelId;
     TextView txt_notificationId;
+    CheckBox checkBox_vibrate;
+    TextView textView_vibrate;
 
 
     @Override
@@ -90,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
         notificationIdControls = (LinearLayout) findViewById(R.id.notificationIdControls);
         txt_channelId = (TextView) findViewById(R.id.txt_channelId);
         txt_notificationId = (TextView) findViewById(R.id.txt_notificationId);
+        checkBox_vibrate = (CheckBox) findViewById(R.id.checkBox_vibrate);
+        textView_vibrate = (TextView) findViewById(R.id.textView_vibrate);
 
         // TODO continue here the style customization
 
@@ -128,27 +132,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "SendNotificationChannel";
             String description = "This is a channel of the SendNotification app";
 
             // get importance
             // TODO it doesn't work, check later
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            if(checkBox_importance.isChecked()){
+            if (checkBox_importance.isChecked()) {
                 importance = getImportance(spinner_importance.getSelectedItem().toString());
                 Log.d("layonf importance: ", Integer.toString(importance));
             }
 
             NotificationChannel channel = new NotificationChannel(Integer.toString(CHANNEL_ID), name, importance);
             channel.setDescription(description);
+            if (checkBox_vibrate.isChecked()) {
+                channel.enableVibration(true);
+            } else {
+                channel.enableVibration(false);
+            }
+
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.deleteNotificationChannel(Integer.toString(CHANNEL_ID));
             notificationManager.createNotificationChannel(channel);
         }
     }
 
     public int getImportance(CharSequence importance) {
-        switch (importance.charAt(0)){
+        switch (importance.charAt(0)) {
             case 'H':
                 return NotificationManager.IMPORTANCE_HIGH;
             case 'D':
@@ -164,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
 
     // get the String Category of the notification
     public String getCategory(CharSequence importance) {
-        switch (importance.toString()){
+        switch (importance.toString()) {
             case "call":
                 return Notification.CATEGORY_CALL;
             case "msg":
@@ -209,8 +220,8 @@ public class MainActivity extends AppCompatActivity {
     //TODO disable landscape mode
 
     //show the importance spinner
-    public void onCheckBoxImportanceClicked(View v){
-        if(checkBox_importance.isChecked()){
+    public void onCheckBoxImportanceClicked(View v) {
+        if (checkBox_importance.isChecked()) {
             spinner_importance.setVisibility(View.VISIBLE);
         } else {
             spinner_importance.setVisibility(View.GONE);
@@ -219,8 +230,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //show the seconds spinner
-    public void onCheckBoxSecondsClicked(View v){
-        if(checkBox_postDelayed.isChecked()){
+    public void onCheckBoxSecondsClicked(View v) {
+        if (checkBox_postDelayed.isChecked()) {
             spinner_seconds.setVisibility(View.VISIBLE);
             textview_seconds.setVisibility(View.VISIBLE);
 
@@ -231,8 +242,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //show the category spinner
-    public void onCheckBoxCategoryClicked(View v){
-        if(checkBox_category.isChecked()){
+    public void onCheckBoxCategoryClicked(View v) {
+        if (checkBox_category.isChecked()) {
             spinner_category.setVisibility(View.VISIBLE);
         } else {
             spinner_category.setVisibility(View.GONE);
@@ -241,39 +252,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //show the style spinner
-    public void onCheckBoxStyleClicked(View v){
-        if(checkBox_style.isChecked()){
+    public void onCheckBoxStyleClicked(View v) {
+        if (checkBox_style.isChecked()) {
             spinner_style.setVisibility(View.VISIBLE);
         } else {
             spinner_style.setVisibility(View.GONE);
         }
     }
 
-    //TODO show the channelId something
-    public void onCheckBoxchannelIdClicked(View v){
-        if(checkBox_channelId.isChecked()){
+    public void onCheckBoxchannelIdClicked(View v) {
+        if (checkBox_channelId.isChecked()) {
             channelIdControls.setVisibility(View.VISIBLE);
         } else {
             channelIdControls.setVisibility(View.GONE);
         }
     }
 
-    //TODO show the channelId something
-    public void onCheckBoxnotificationIdClicked(View v){
-        if(checkBox_notificationId.isChecked()){
+    public void onCheckBoxnotificationIdClicked(View v) {
+        if (checkBox_notificationId.isChecked()) {
             notificationIdControls.setVisibility(View.VISIBLE);
         } else {
             notificationIdControls.setVisibility(View.GONE);
         }
     }
 
+    public void onCheckBoxVibrateClicked(View v) {
+        textView_vibrate.setVisibility(View.VISIBLE);
+        textView_vibrate.setSelected(true);
+        Handler handler = new Handler();
+        Runnable closeTextViewVibrate = new Runnable() {
+            public void run() {
+                textView_vibrate.setVisibility(View.GONE);
+            }
+        };
+        handler.postDelayed(closeTextViewVibrate, 30000);
+    }
 
-    public void channelIdMinus(View v){
+
+    public void channelIdMinus(View v) {
         CHANNEL_ID--;
         txt_channelId.setText(Integer.toString(CHANNEL_ID));
     }
 
-    public void channelIdPlus(View v){
+    public void channelIdPlus(View v) {
         CHANNEL_ID++;
         txt_channelId.setText(Integer.toString(CHANNEL_ID));
     }
@@ -301,33 +322,33 @@ public class MainActivity extends AppCompatActivity {
         // create a Notification
         final NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this, Integer.toString(CHANNEL_ID))
-                .setSmallIcon(R.drawable.venturus)
-                .setContentText(getString(R.string.notifi_text));
+                        .setSmallIcon(R.drawable.venturus)
+                        .setContentText(getString(R.string.notifi_text));
 
 
         // TODO create a check box with a Spinner to chose the notification style
         // Doing
 
         // set category
-        if(checkBox_category.isChecked()){
+        if (checkBox_category.isChecked()) {
             builder.setCategory(getCategory(spinner_category.getSelectedItem().toString()));
         }
 
         // set style
-        if(checkBox_style.isChecked()) {
+        if (checkBox_style.isChecked()) {
             builder.setStyle(getStyle(spinner_style.getSelectedItem().toString()));
         } else {
             builder.setStyle(getStyle("BigTextStyle")); //default
         }
 
         // set colorized
-        if(checkBox_colorized.isChecked()) {
+        if (checkBox_colorized.isChecked()) {
             Log.d("layonf", "colorized");
             builder.setColorized(true);
             builder.setColor(Color.BLUE);
         }
 
-        if(checkBox_group.isChecked()) {
+        if (checkBox_group.isChecked()) {
             //builder.setGroup(GROUP_KEY_WORK_EMAIL);
             //NOTIFICATION_ID++;
 
@@ -335,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        if(checkBox_custom.isChecked()) {
+        if (checkBox_custom.isChecked()) {
             //builder.setGroup(GROUP_KEY_WORK_EMAIL);
             //NOTIFICATION_ID++;
             Log.d("layonf", "sendCustomNotification");
@@ -350,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
 
         //postdelay
         int delay = 0;
-        if(checkBox_postDelayed.isChecked()){
+        if (checkBox_postDelayed.isChecked()) {
             delay = Integer.parseInt(spinner_seconds.getSelectedItem().toString());
             StringBuilder str = new StringBuilder();
             str.append(getString(R.string.toast));
@@ -367,17 +388,17 @@ public class MainActivity extends AppCompatActivity {
         //TODO fullscreen doesn't work
 
         // set ongoing
-        if (checkBox_ongoing.isChecked()){
+        if (checkBox_ongoing.isChecked()) {
             notification.flags |= Notification.FLAG_ONGOING_EVENT;
         }
 
         // set Flag_NO_CLEAR
-        if (checkBox_flagnoclear.isChecked()){
+        if (checkBox_flagnoclear.isChecked()) {
             notification.flags |= Notification.FLAG_NO_CLEAR;
         }
 
         //TODO the FLAG_AUTO_CANCEL doesn't work
-        if (checkBox_autocancel.isChecked()){
+        if (checkBox_autocancel.isChecked()) {
             notification.flags |= Notification.FLAG_AUTO_CANCEL;
         }
 
@@ -399,18 +420,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     //TODO refactoring this method to insert the logic in sendNotification()
     public void sendGroupNotification() {
         createNotificationChannel();
 
         Notification newMessageNotification1 =
                 new NotificationCompat.Builder(MainActivity.this, Integer.toString(CHANNEL_ID))
-                .setSmallIcon(R.drawable.venturus)
-                .setContentTitle("Jucelma")
-                .setContentText("You will not believe...")
-                .setGroup(GROUP_KEY_WORK_EMAIL)
-                .build();
+                        .setSmallIcon(R.drawable.venturus)
+                        .setContentTitle("Jucelma")
+                        .setContentText("You will not believe...")
+                        .setGroup(GROUP_KEY_WORK_EMAIL)
+                        .build();
 
         Notification newMessageNotification2 =
                 new NotificationCompat.Builder(MainActivity.this, Integer.toString(CHANNEL_ID))
@@ -439,23 +459,23 @@ public class MainActivity extends AppCompatActivity {
 
         Notification summaryNotification =
                 new NotificationCompat.Builder(MainActivity.this, Integer.toString(CHANNEL_ID))
-                .setContentTitle("Four new messages")
-                // set content text to support devices running API level < 24
-                // .setContentText("Two new messages")
-                .setSmallIcon(R.drawable.venturus)
-                // build summary info into InboxStyle template
-                .setStyle(new NotificationCompat.InboxStyle()
-                    .addLine("Jucelma")
-                    .addLine("Jucelma")
-                    .addLine("Creuza")
-                    .addLine("Creuza")
-                    .setBigContentTitle("4 new messages")
-                    .setSummaryText("jucelma@example.com"))
-                // specify which group this notification belongs to
-                .setGroup(GROUP_KEY_WORK_EMAIL)
-                // set this notification as the summary for the group
-                .setGroupSummary(true)
-                .build();
+                        .setContentTitle("Four new messages")
+                        // set content text to support devices running API level < 24
+                        // .setContentText("Two new messages")
+                        .setSmallIcon(R.drawable.venturus)
+                        // build summary info into InboxStyle template
+                        .setStyle(new NotificationCompat.InboxStyle()
+                                .addLine("Jucelma")
+                                .addLine("Jucelma")
+                                .addLine("Creuza")
+                                .addLine("Creuza")
+                                .setBigContentTitle("4 new messages")
+                                .setSummaryText("jucelma@example.com"))
+                        // specify which group this notification belongs to
+                        .setGroup(GROUP_KEY_WORK_EMAIL)
+                        // set this notification as the summary for the group
+                        .setGroupSummary(true)
+                        .build();
 
         NotificationManagerCompat notificationMangerCompat = NotificationManagerCompat.from(this);
         notificationMangerCompat.notify(12, newMessageNotification1);
@@ -532,13 +552,13 @@ public class MainActivity extends AppCompatActivity {
 
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this, Integer.toString(CHANNEL_ID))
-                .setSmallIcon(R.drawable.venturus)
-                .setContentTitle("layonf fullScreen notification test")
-                //.setContentText(getString(R.string.notifi_text))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_CALL)
-                //Use a full-screen
-                .setFullScreenIntent(fullScreenPendingIntent, true);
+                        .setSmallIcon(R.drawable.venturus)
+                        .setContentTitle("layonf fullScreen notification test")
+                        //.setContentText(getString(R.string.notifi_text))
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setCategory(NotificationCompat.CATEGORY_CALL)
+                        //Use a full-screen
+                        .setFullScreenIntent(fullScreenPendingIntent, true);
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
